@@ -9,16 +9,16 @@ import {
 	downloadResume,
 	deleteResume,
 } from "../controllers/jobApplicationController.js";
-import upload from "../middleware/upload.js"; // <-- Import upload middleware
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
 router.get("/", getJobApplications);
-router.post("/", createJobApplication);
+router.post("/", upload.single("resume"), createJobApplication);
 router.put("/:id", updateJobApplication);
 router.delete("/:id", deleteJobApplication);
 
-// New routes for handling resume upload/download/delete
+// Resume-specific routes
 router.post("/:id/upload-resume", upload.single("resume"), uploadResume);
 router.get("/:id/download-resume", downloadResume);
 router.delete("/:id/delete-resume", deleteResume);

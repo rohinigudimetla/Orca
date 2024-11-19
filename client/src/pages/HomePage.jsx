@@ -1,10 +1,11 @@
-// client/src/pages/HomePage.jsx
 import React from "react";
 import JobApplications from "../features/JobApplications";
+// import "./HomePage.css";
 
 const HomePage = () => {
 	return (
-		<div>
+		<div className="home-page">
+			<h1>Job Applications</h1>
 			<JobApplications />
 		</div>
 	);

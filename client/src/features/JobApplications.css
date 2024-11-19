@@ -1,0 +1,23 @@
+.applications-container {
+	margin: 20px;
+	border-radius: 8px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+}
+
+.applications-header {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr 1fr;
+	background-color: #f8f9fa;
+	font-weight: bold;
+	border-bottom: 2px solid #ddd;
+}
+
+.header-cell {
+	padding: 15px;
+	color: #333;
+}
+
+.applications-body {
+	background-color: white;
+}
