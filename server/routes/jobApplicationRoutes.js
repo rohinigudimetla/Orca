@@ -8,6 +8,7 @@ import {
 	uploadResume,
 	downloadResume,
 	deleteResume,
+	generateResume,
 } from "../controllers/jobApplicationController.js";
 import upload from "../middleware/upload.js";
 
@@ -22,5 +23,5 @@ router.delete("/:id", deleteJobApplication);
 router.post("/:id/upload-resume", upload.single("resume"), uploadResume);
 router.get("/:id/download-resume", downloadResume);
 router.delete("/:id/delete-resume", deleteResume);
-
+router.post("/:id/generate-resume", generateResume);
 export default router;

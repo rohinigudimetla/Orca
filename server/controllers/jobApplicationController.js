@@ -120,3 +120,40 @@ export const deleteResume = async (req, res) => {
 		res.status(400).json({ message: error.message });
 	}
 };
+
+// Add this new controller function
+export const generateResume = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { matchPercentage } = req.body;
+
+		const application = await JobApplication.findById(id);
+
+		if (!application) {
+			return res.status(404).json({ message: "Job application not found" });
+		}
+
+		if (!application.jobDescription) {
+			return res.status(400).json({
+				message: "Job description is required to generate a resume",
+				requiredField: "jobDescription",
+			});
+		}
+
+		if (!application.resumeText) {
+			return res.status(400).json({
+				message: "Resume text is required to generate a new resume",
+				requiredField: "resumeText",
+			});
+		}
+
+		// TODO: Add AI integration here
+		// For now, return a mock response
+		res.status(200).json({
+			message: "Resume generation initiated",
+			status: "pending",
+		});
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+};

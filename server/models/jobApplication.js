@@ -16,7 +16,9 @@ const jobApplicationSchema = new mongoose.Schema({
 		required: true,
 	},
 	contact: { type: String, required: true },
-	resume: { type: String, default: null }, // <-- Added resume field to store the file path or name
+	resume: { type: String, default: null },
+	jobDescription: { type: String, default: "" },
+	resumeText: { type: String, default: null },
 });
 
 const JobApplication = mongoose.model("JobApplication", jobApplicationSchema);

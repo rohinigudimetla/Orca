@@ -87,20 +87,24 @@ const JobApplications = () => {
 	};
 
 	if (loading) {
-		return <div className="loading">Loading applications...</div>;
+		return (
+			<div className="flex justify-center items-center p-8">
+				Loading applications...
+			</div>
+		);
 	}
 
 	return (
-		<div className="applications-container">
-			<div className="applications-header">
-				<div className="header-cell">Role</div>
-				<div className="header-cell">Company</div>
-				<div className="header-cell">Status</div>
-				<div className="header-cell">Contact</div>
-				<div className="header-cell">Resume</div>
-				<div className="header-cell">Actions</div>
+		<div className="m-5 rounded-lg shadow-lg overflow-hidden">
+			<div className="grid grid-cols-6 bg-gray-50 font-semibold border-b-2 border-gray-200">
+				<div className="p-4">Role</div>
+				<div className="p-4">Company</div>
+				<div className="p-4">Status</div>
+				<div className="p-4">Contact</div>
+				<div className="p-4">Resume</div>
+				<div className="p-4">Actions</div>
 			</div>
-			<div className="applications-body">
+			<div className="bg-white">
 				{applications.length > 0 ? (
 					applications.map((application) => (
 						<JobApplicationCard
@@ -112,10 +116,17 @@ const JobApplications = () => {
 							onEditChange={handleEditChange}
 							onEditClick={() => handleEditClick(application)}
 							onSaveEdit={handleSaveEdit}
+							onUpdate={(updatedApp) => {
+								setApplications((prev) =>
+									prev.map((app) =>
+										app._id === updatedApp._id ? updatedApp : app
+									)
+								);
+							}}
 						/>
 					))
 				) : (
-					<div className="no-applications-message">
+					<div className="p-8 text-center text-gray-500">
 						No job applications found. Add your first application below!
 					</div>
 				)}

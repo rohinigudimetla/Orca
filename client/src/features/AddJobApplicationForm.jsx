@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./AddJobApplicationForm.css";
 
 const AddJobApplicationForm = ({ onAdd }) => {
 	const [formData, setFormData] = useState({
@@ -52,8 +51,11 @@ const AddJobApplicationForm = ({ onAdd }) => {
 	};
 
 	return (
-		<div className="application-row new-application">
-			<div className="cell">
+		<form
+			onSubmit={handleSubmit}
+			className="grid grid-cols-6 bg-gray-50 border-t-2 border-gray-200 border-dashed hover:bg-white transition-colors"
+		>
+			<div className="p-3">
 				<input
 					type="text"
 					name="role"
@@ -61,9 +63,10 @@ const AddJobApplicationForm = ({ onAdd }) => {
 					value={formData.role}
 					onChange={handleChange}
 					required
+					className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent"
 				/>
 			</div>
-			<div className="cell">
+			<div className="p-3">
 				<input
 					type="text"
 					name="company"
@@ -71,18 +74,27 @@ const AddJobApplicationForm = ({ onAdd }) => {
 					value={formData.company}
 					onChange={handleChange}
 					required
+					className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent"
 				/>
 			</div>
-			<div className="cell">
-				<select name="status" value={formData.status} onChange={handleChange}>
+			<div className="p-3">
+				<select
+					name="status"
+					value={formData.status}
+					onChange={handleChange}
+					className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent"
+				>
 					<option value="submitted">Submitted</option>
 					<option value="assessment">Assessment</option>
 					<option value="interviewing">Interviewing</option>
 					<option value="offer received">Offer Received</option>
 					<option value="offer accepted">Offer Accepted</option>
+					<option value="offer rejected">Offer Rejected</option>
+					<option value="hired">Hired</option>
+					<option value="rejected">Rejected</option>
 				</select>
 			</div>
-			<div className="cell">
+			<div className="p-3">
 				<input
 					type="text"
 					name="contact"
@@ -90,31 +102,27 @@ const AddJobApplicationForm = ({ onAdd }) => {
 					value={formData.contact}
 					onChange={handleChange}
 					required
+					className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent"
 				/>
 			</div>
-			<div className="cell resume-cell">
-				<div className="resume-actions">
-					<div className="upload-container">
-						<input
-							type="file"
-							id="new-resume-upload"
-							name="resume"
-							accept=".pdf"
-							onChange={handleFileChange}
-							style={{ display: "none" }}
-						/>
-						<label htmlFor="new-resume-upload" className="upload-btn">
-							Upload Resume
-						</label>
-					</div>
-				</div>
+			<div className="p-3">
+				<input
+					type="file"
+					name="resume"
+					onChange={handleFileChange}
+					required
+					className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent"
+				/>
 			</div>
-			<div className="cell actions-cell">
-				<button type="submit" className="add-btn" onClick={handleSubmit}>
+			<div className="p-3">
+				<button
+					type="submit"
+					className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+				>
 					Add
 				</button>
 			</div>
-		</div>
+		</form>
 	);
 };
 

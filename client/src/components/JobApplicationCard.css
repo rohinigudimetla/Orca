@@ -101,3 +101,39 @@ select:focus {
 		flex-direction: column;
 	}
 }
+
+/* Add these new styles */
+.jd-prompt {
+	position: relative;
+	padding: 10px;
+	background: #f8f9fa;
+	border-radius: 4px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.job-description-textarea.required {
+	border-color: #ff9800;
+}
+
+.prompt-actions {
+	display: flex;
+	gap: 8px;
+	margin-top: 8px;
+	justify-content: flex-end;
+}
+
+.generate-btn:disabled {
+	background-color: #ccc;
+	cursor: not-allowed;
+}
+
+/* Update existing styles */
+.description-preview {
+	cursor: pointer;
+	padding: 4px;
+	border-radius: 4px;
+}
+
+.description-preview:hover {
+	background-color: #f0f0f0;
+}
