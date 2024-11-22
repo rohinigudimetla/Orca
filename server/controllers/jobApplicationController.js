@@ -1,5 +1,26 @@
 // server/controllers/jobApplicationController.js
+import { readFileSync } from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import pdfParser from "pdf-parser";
 import JobApplication from "../models/jobApplication.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Update the text extraction function to use callback style
+const extractTextFromPdf = (filePath) => {
+	return new Promise((resolve, reject) => {
+		pdfParser.pdf2text(filePath, (error, text) => {
+			if (error) {
+				console.error("PDF parsing error:", error);
+				reject(new Error("Failed to parse PDF file"));
+			} else {
+				resolve(text);
+			}
+		});
+	});
+};
 
 // Get all job applications
 export const getJobApplications = async (req, res) => {
@@ -14,26 +35,44 @@ export const getJobApplications = async (req, res) => {
 // Create a new job application
 export const createJobApplication = async (req, res) => {
 	try {
+		console.log("Received request body:", req.body);
+		console.log("Received file:", req.file);
+
 		const { role, company, status, contact } = req.body;
 
 		// Validate required fields
 		if (!role || !company || !status || !contact) {
-			return res.status(400).json({ message: "All fields are required" });
+			if (req.file) {
+				fs.unlinkSync(req.file.path); // Clean up uploaded file if validation fails
+			}
+			return res.status(400).json({
+				message: "All fields are required",
+				received: { role, company, status, contact },
+			});
 		}
 
-		console.log("Request Body:", req.body); // Logs text fields
-		console.log("Uploaded File:", req.file); // Logs file details
+		// Extract text from PDF if file exists
+		let resumeText = "";
+		if (req.file) {
+			try {
+				resumeText = await extractTextFromPdf(req.file.path);
+			} catch (error) {
+				console.error("PDF parsing error:", error);
+			}
+		}
 
 		const newJobApplication = new JobApplication({
 			role,
 			company,
 			status,
 			contact,
-			resume: req.file ? req.file.path : null, // Save file path if a file is uploaded
+			resume: req.file ? req.file.path : null,
+			resumeText: resumeText || null,
 		});
 
-		await newJobApplication.save();
-		res.status(201).json(newJobApplication);
+		const savedApplication = await newJobApplication.save();
+		console.log("Saved application:", savedApplication);
+		res.status(201).json(savedApplication);
 	} catch (error) {
 		console.error("Error creating job application:", error);
 		res.status(500).json({ message: error.message });
@@ -78,12 +117,24 @@ export const uploadResume = async (req, res) => {
 		if (!jobApplication)
 			return res.status(404).json({ message: "Job application not found" });
 
-		// Save resume file path to the database
+		// Extract text from PDF
+		let resumeText = "";
+		if (req.file) {
+			try {
+				resumeText = await extractTextFromPdf(req.file.path);
+			} catch (error) {
+				return res.status(400).json({ message: error.message });
+			}
+		}
+
+		// Save resume file path and text to the database
 		jobApplication.resume = req.file.path;
+		jobApplication.resumeText = resumeText;
 		await jobApplication.save();
+
+		console.log("Uploaded file:", req.file);
+		console.log("Updated job application:", jobApplication);
 		res.status(200).json(jobApplication);
-		console.log("Uploaded file:", req.file); // Check multer behavior
-		console.log("Updated job application:", jobApplication); // Confirm database update
 	} catch (error) {
 		res.status(400).json({ message: error.message });
 	}

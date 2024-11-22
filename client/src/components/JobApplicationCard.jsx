@@ -181,6 +181,7 @@ const JobApplicationCard = ({
 				isOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 				jobDescription={application.jobDescription || ""}
+				resumeText={application.resumeText || ""}
 				onGenerate={handleGenerateClick}
 				onSaveJD={handleSaveJD}
 			/>

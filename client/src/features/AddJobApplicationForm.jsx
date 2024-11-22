@@ -21,8 +21,16 @@ const AddJobApplicationForm = ({ onAdd }) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const submissionData = new FormData();
+
+		// Add each field to FormData
 		Object.keys(formData).forEach((key) => {
-			if (formData[key]) submissionData.append(key, formData[key]);
+			if (formData[key]) {
+				if (key === "resume") {
+					submissionData.append("resume", formData[key]);
+				} else {
+					submissionData.append(key, formData[key]);
+				}
+			}
 		});
 
 		try {
@@ -44,9 +52,14 @@ const AddJobApplicationForm = ({ onAdd }) => {
 					contact: "",
 					resume: null,
 				});
+			} else {
+				const errorData = await response.json();
+				console.error("Server error:", errorData);
+				alert(errorData.message || "Failed to create job application");
 			}
 		} catch (error) {
 			console.error("Failed to add job application:", error);
+			alert("Failed to create job application. Please try again.");
 		}
 	};
 

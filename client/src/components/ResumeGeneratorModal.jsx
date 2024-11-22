@@ -4,6 +4,7 @@ const ResumeGeneratorModal = ({
 	isOpen,
 	onClose,
 	jobDescription,
+	resumeText,
 	onGenerate,
 	onSaveJD,
 }) => {
@@ -41,6 +42,15 @@ const ResumeGeneratorModal = ({
 						className="w-full min-h-[200px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
 						placeholder="Enter job description..."
 					/>
+				</div>
+
+				<div className="mb-6">
+					<label className="block text-sm font-medium text-gray-700 mb-2">
+						Resume Text
+					</label>
+					<div className="w-full min-h-[200px] p-3 border border-gray-300 rounded-lg bg-gray-50 overflow-y-auto whitespace-pre-wrap">
+						{resumeText || "No resume text available"}
+					</div>
 				</div>
 
 				<div className="flex justify-end gap-3 items-center">
