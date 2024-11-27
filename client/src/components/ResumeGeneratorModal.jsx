@@ -48,7 +48,7 @@ const ResumeGeneratorModal = ({
 					<label className="block text-sm font-medium text-gray-700 mb-2">
 						Resume Text
 					</label>
-					<div className="w-full min-h-[200px] p-3 border border-gray-300 rounded-lg bg-gray-50 overflow-y-auto whitespace-pre-wrap">
+					<div className="w-full h-[200px] p-3 border border-gray-300 rounded-lg bg-gray-50 overflow-y-auto whitespace-pre-wrap">
 						{resumeText || "No resume text available"}
 					</div>
 				</div>

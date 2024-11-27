@@ -1,11 +1,13 @@
 // server/controllers/jobApplicationController.js
-import { readFileSync } from "fs";
+import { readFileSync, createReadStream, unlinkSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import pdfParser from "pdf-parser";
 import JobApplication from "../models/jobApplication.js";
 import { exec } from "child_process";
 import { promisify } from "util";
+import fetch from "node-fetch";
+import FormData from "form-data";
 const execAsync = promisify(exec);
 
 const __filename = fileURLToPath(import.meta.url);
@@ -15,16 +17,38 @@ const __dirname = path.dirname(__filename);
 const extractTextFromPdf = async (filePath) => {
 	try {
 		console.log("Extracting text from:", filePath);
-		const { stdout, stderr } = await execAsync(
-			`python3 ${path.join(__dirname, "../pdf_extractor.py")} "${filePath}"`
-		);
+		const formData = new FormData();
+		const fileBuffer = readFileSync(filePath);
+		formData.append("file", fileBuffer, {
+			filename: path.basename(filePath),
+			contentType: "application/pdf",
+		});
 
-		if (stderr) {
-			console.error("Python script error:", stderr);
-			throw new Error("Failed to parse PDF file");
+		let response;
+		try {
+			response = await fetch("http://localhost:5001/extract", {
+				method: "POST",
+				body: formData,
+			});
+		} catch (error) {
+			if (error.code === "ECONNREFUSED") {
+				throw new Error(
+					"PDF extraction service is not running. Please start the Python service."
+				);
+			}
+			throw error;
 		}
 
-		return stdout.trim();
+		if (!response.ok) {
+			throw new Error("PDF extraction failed");
+		}
+
+		const data = await response.json();
+		if (data.error) {
+			throw new Error(data.error);
+		}
+
+		return data.text;
 	} catch (error) {
 		console.error("PDF extraction error:", error);
 		throw error;
@@ -52,7 +76,7 @@ export const createJobApplication = async (req, res) => {
 		// Validate required fields
 		if (!role || !company || !status || !contact) {
 			if (req.file) {
-				fs.unlinkSync(req.file.path); // Clean up uploaded file if validation fails
+				unlinkSync(req.file.path); // Clean up uploaded file if validation fails
 			}
 			return res.status(400).json({
 				message: "All fields are required",
@@ -123,28 +147,26 @@ export const uploadResume = async (req, res) => {
 	try {
 		const { id } = req.params;
 		const jobApplication = await JobApplication.findById(id);
-		if (!jobApplication)
-			return res.status(404).json({ message: "Job application not found" });
 
-		// Extract text from PDF
-		let resumeText = "";
-		if (req.file) {
-			try {
-				resumeText = await extractTextFromPdf(req.file.path);
-			} catch (error) {
-				return res.status(400).json({ message: error.message });
-			}
+		if (!jobApplication) {
+			return res.status(404).json({ message: "Job application not found" });
 		}
 
-		// Save resume file path and text to the database
+		if (!req.file) {
+			return res.status(400).json({ message: "No file uploaded" });
+		}
+
+		// Extract text from the PDF
+		const extractedText = await extractTextFromPdf(req.file.path);
+
+		// Save the file path and extracted text
 		jobApplication.resume = req.file.path;
-		jobApplication.resumeText = resumeText;
+		jobApplication.resumeText = extractedText;
 		await jobApplication.save();
 
-		console.log("Uploaded file:", req.file);
-		console.log("Updated job application:", jobApplication);
 		res.status(200).json(jobApplication);
 	} catch (error) {
+		console.error("Upload error:", error);
 		res.status(400).json({ message: error.message });
 	}
 };
@@ -172,8 +194,12 @@ export const deleteResume = async (req, res) => {
 			return res.status(404).json({ message: "Resume not found" });
 
 		// Delete the resume file
-		fs.unlinkSync(path.resolve(jobApplication.resume));
-		jobApplication.resume = null; // Reset the resume field
+		unlinkSync(path.resolve(jobApplication.resume));
+
+		// Reset both resume and resumeText fields
+		jobApplication.resume = null;
+		jobApplication.resumeText = null;
+
 		await jobApplication.save();
 		res.status(200).json(jobApplication);
 	} catch (error) {
