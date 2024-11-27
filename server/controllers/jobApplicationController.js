@@ -4,22 +4,31 @@ import path from "path";
 import { fileURLToPath } from "url";
 import pdfParser from "pdf-parser";
 import JobApplication from "../models/jobApplication.js";
+import { exec } from "child_process";
+import { promisify } from "util";
+const execAsync = promisify(exec);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Update the text extraction function to use callback style
-const extractTextFromPdf = (filePath) => {
-	return new Promise((resolve, reject) => {
-		pdfParser.pdf2text(filePath, (error, text) => {
-			if (error) {
-				console.error("PDF parsing error:", error);
-				reject(new Error("Failed to parse PDF file"));
-			} else {
-				resolve(text);
-			}
-		});
-	});
+const extractTextFromPdf = async (filePath) => {
+	try {
+		console.log("Extracting text from:", filePath);
+		const { stdout, stderr } = await execAsync(
+			`python3 ${path.join(__dirname, "../pdf_extractor.py")} "${filePath}"`
+		);
+
+		if (stderr) {
+			console.error("Python script error:", stderr);
+			throw new Error("Failed to parse PDF file");
+		}
+
+		return stdout.trim();
+	} catch (error) {
+		console.error("PDF extraction error:", error);
+		throw error;
+	}
 };
 
 // Get all job applications

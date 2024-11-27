@@ -11,13 +11,17 @@ const JobApplicationCard = ({
 	onSaveEdit,
 	onUpdate,
 }) => {
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isGeneratorOpen, setIsGeneratorOpen] = useState(false);
 
 	const handleGenerateClick = () => {
-		setIsModalOpen(true);
+		setIsGeneratorOpen(true);
 	};
 
-	const handleSaveJD = async (newJD) => {
+	const handleGeneratorClose = () => {
+		setIsGeneratorOpen(false);
+	};
+
+	const handleSaveJD = async (jobDescription) => {
 		try {
 			const response = await fetch(
 				`http://localhost:5000/api/job-applications/${application._id}`,
@@ -26,21 +30,16 @@ const JobApplicationCard = ({
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({
-						...application,
-						jobDescription: newJD,
-					}),
+					body: JSON.stringify({ jobDescription }),
 				}
 			);
 
-			if (!response.ok) {
-				throw new Error("Failed to update job description");
+			if (response.ok) {
+				const updatedApp = await response.json();
+				onUpdate(updatedApp);
 			}
-
-			const updatedApplication = await response.json();
-			onUpdate(updatedApplication);
 		} catch (error) {
-			console.error("Error updating job description:", error);
+			console.error("Failed to save job description:", error);
 		}
 	};
 
@@ -177,14 +176,16 @@ const JobApplicationCard = ({
 				</button>
 			</div>
 
-			<ResumeGeneratorModal
-				isOpen={isModalOpen}
-				onClose={() => setIsModalOpen(false)}
-				jobDescription={application.jobDescription || ""}
-				resumeText={application.resumeText || ""}
-				onGenerate={handleGenerateClick}
-				onSaveJD={handleSaveJD}
-			/>
+			{isGeneratorOpen && (
+				<ResumeGeneratorModal
+					isOpen={isGeneratorOpen}
+					onClose={handleGeneratorClose}
+					jobDescription={application.jobDescription}
+					resumeText={application.resumeText}
+					onGenerate={() => {}}
+					onSaveJD={handleSaveJD}
+				/>
+			)}
 		</div>
 	);
 };

@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../../Business-Portal-FED/World-Salon-Business-Portal-FED"
 		}
 	],
 	"settings": {}

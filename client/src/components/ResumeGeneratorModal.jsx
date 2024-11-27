@@ -54,11 +54,7 @@ const ResumeGeneratorModal = ({
 				</div>
 
 				<div className="flex justify-end gap-3 items-center">
-					<div
-						className={`transition-opacity duration-300 ${
-							showSaveIndicator ? "opacity-100" : "opacity-0"
-						}`}
-					>
+					{showSaveIndicator && (
 						<span className="text-green-500 flex items-center gap-1">
 							<svg
 								className="w-4 h-4"
@@ -75,7 +71,7 @@ const ResumeGeneratorModal = ({
 							</svg>
 							Saved
 						</span>
-					</div>
+					)}
 					<button
 						onClick={handleSave}
 						className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
