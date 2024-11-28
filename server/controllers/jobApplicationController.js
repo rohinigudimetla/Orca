@@ -8,6 +8,7 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import fetch from "node-fetch";
 import FormData from "form-data";
+import { generateModifiedResume } from "../services/openaiService.js";
 const execAsync = promisify(exec);
 
 const __filename = fileURLToPath(import.meta.url);
@@ -211,7 +212,7 @@ export const deleteResume = async (req, res) => {
 export const generateResume = async (req, res) => {
 	try {
 		const { id } = req.params;
-		const { matchPercentage } = req.body;
+		const { prompt } = req.body;
 
 		const application = await JobApplication.findById(id);
 
@@ -219,25 +220,21 @@ export const generateResume = async (req, res) => {
 			return res.status(404).json({ message: "Job application not found" });
 		}
 
-		if (!application.jobDescription) {
+		if (!application.jobDescription || !application.resumeText) {
 			return res.status(400).json({
-				message: "Job description is required to generate a resume",
-				requiredField: "jobDescription",
+				message: "Both job description and resume text are required",
 			});
 		}
 
-		if (!application.resumeText) {
-			return res.status(400).json({
-				message: "Resume text is required to generate a new resume",
-				requiredField: "resumeText",
-			});
-		}
+		const modifiedResume = await generateModifiedResume(
+			application.resumeText,
+			application.jobDescription,
+			prompt
+		);
 
-		// TODO: Add AI integration here
-		// For now, return a mock response
 		res.status(200).json({
-			message: "Resume generation initiated",
-			status: "pending",
+			modifiedResume,
+			message: "Resume generated successfully",
 		});
 	} catch (error) {
 		res.status(500).json({ message: error.message });

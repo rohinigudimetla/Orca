@@ -7,8 +7,14 @@ const ResumeGeneratorModal = ({
 	resumeText,
 	onGenerate,
 	onSaveJD,
+	applicationId,
 }) => {
 	const [jd, setJd] = useState(jobDescription || "");
+	const [prompt, setPrompt] = useState(
+		"Please modify my resume to better match this job description. Highlight relevant skills and experiences, while maintaining truthfulness. Make it more impactful and targeted."
+	);
+	const [generatedResume, setGeneratedResume] = useState("");
+	const [isGenerating, setIsGenerating] = useState(false);
 	const [showSaveIndicator, setShowSaveIndicator] = useState(false);
 
 	if (!isOpen) return null;
@@ -19,39 +25,95 @@ const ResumeGeneratorModal = ({
 		setTimeout(() => setShowSaveIndicator(false), 2000);
 	};
 
+	const handleGenerate = async () => {
+		setIsGenerating(true);
+		try {
+			const response = await fetch(
+				`http://localhost:5000/api/job-applications/${applicationId}/generate-resume`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ prompt }),
+				}
+			);
+
+			if (response.ok) {
+				const data = await response.json();
+				setGeneratedResume(data.modifiedResume);
+			}
+		} catch (error) {
+			console.error("Failed to generate resume:", error);
+		} finally {
+			setIsGenerating(false);
+		}
+	};
+
 	return (
-		<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-			<div className="bg-white rounded-lg p-6 w-11/12 max-w-2xl">
+		<div className="fixed inset-0 bg-richBlack/50 flex items-center justify-center z-50">
+			<div className="bg-bone rounded-lg p-6 w-11/12 max-w-2xl max-h-[90vh] overflow-y-auto">
 				<div className="flex justify-between items-center mb-4">
-					<h2 className="text-xl font-semibold">Generate Resume</h2>
+					<h2 className="text-xl font-semibold text-richBlack">
+						Generate Resume
+					</h2>
 					<button
 						onClick={onClose}
-						className="text-gray-500 hover:text-gray-700"
+						className="text-richBlack hover:text-orange"
 					>
 						×
 					</button>
 				</div>
 
 				<div className="mb-6">
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+					<label className="block text-sm font-medium text-richBlack mb-2">
 						Job Description
 					</label>
 					<textarea
 						value={jd}
 						onChange={(e) => setJd(e.target.value)}
-						className="w-full min-h-[200px] p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="w-full min-h-[200px] p-3 border border-richBlack/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white"
 						placeholder="Enter job description..."
 					/>
 				</div>
 
 				<div className="mb-6">
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+					<label className="block text-sm font-medium text-richBlack mb-2">
+						AI Instructions
+					</label>
+					<textarea
+						value={prompt}
+						onChange={(e) => setPrompt(e.target.value)}
+						className="w-full h-[100px] p-3 border border-richBlack/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white"
+						placeholder="Enter instructions for AI..."
+					/>
+				</div>
+
+				<div className="mb-6">
+					<label className="block text-sm font-medium text-richBlack mb-2">
 						Resume Text
 					</label>
-					<div className="w-full h-[200px] p-3 border border-gray-300 rounded-lg bg-gray-50 overflow-y-auto whitespace-pre-wrap">
+					<div className="w-full h-[200px] p-3 border border-richBlack/20 rounded-lg bg-white overflow-y-auto whitespace-pre-wrap">
 						{resumeText || "No resume text available"}
 					</div>
 				</div>
+
+				{generatedResume && (
+					<div className="mb-6">
+						<label className="block text-sm font-medium text-richBlack mb-2">
+							Generated Resume
+						</label>
+						<div className="w-full h-[200px] p-3 border border-richBlack/20 rounded-lg bg-white overflow-y-auto whitespace-pre-wrap">
+							{generatedResume}
+						</div>
+					</div>
+				)}
+
+				{isGenerating && (
+					<div className="text-center mb-4">
+						<span className="text-orange-500">Generating resume...</span>
+					</div>
+				)}
 
 				<div className="flex justify-end gap-3 items-center">
 					{showSaveIndicator && (
@@ -74,19 +136,20 @@ const ResumeGeneratorModal = ({
 					)}
 					<button
 						onClick={handleSave}
-						className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+						className="px-4 py-2 bg-seaGreen text-white rounded hover:bg-seaGreen/90 transition-colors"
 					>
 						Save Description
 					</button>
 					<button
-						onClick={() => onGenerate(jd)}
-						className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors"
+						onClick={handleGenerate}
+						disabled={isGenerating}
+						className="px-4 py-2 bg-seaGreen text-white rounded hover:bg-seaGreen/90 transition-colors disabled:bg-celadon disabled:cursor-not-allowed"
 					>
-						Generate
+						{isGenerating ? "Generating..." : "Generate"}
 					</button>
 					<button
 						onClick={onClose}
-						className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+						className="px-4 py-2 bg-richBlack text-white rounded hover:bg-richBlack/90 transition-colors"
 					>
 						Cancel
 					</button>

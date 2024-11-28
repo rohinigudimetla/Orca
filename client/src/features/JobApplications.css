@@ -1,23 +1,26 @@
 .applications-container {
 	margin: 20px;
 	border-radius: 8px;
-	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 0 20px rgba(13, 31, 34, 0.1);
 	overflow: hidden;
+	background-color: var(--bone);
 }
 
 .applications-header {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr 1fr;
-	background-color: #f8f9fa;
+	background-color: var(--richBlack);
+	color: var(--bone);
 	font-weight: bold;
-	border-bottom: 2px solid #ddd;
+	border-bottom: 2px solid var(--seaGreen);
 }
 
-.header-cell {
-	padding: 15px;
-	color: #333;
-}
-
-.applications-body {
+.application-row {
 	background-color: white;
+	border-bottom: 1px solid var(--richBlack);
+	transition: all 0.3s ease;
+}
+
+.application-row:hover {
+	background-color: var(--bone);
 }

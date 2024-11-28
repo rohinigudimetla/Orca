@@ -179,19 +179,19 @@ const JobApplicationCard = ({
 						<div className="flex gap-2">
 							<button
 								onClick={handleDownloadResume}
-								className="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600"
+								className="px-3 py-1.5 bg-seaGreen text-white rounded hover:bg-seaGreen/90"
 							>
 								Download
 							</button>
 							<button
 								onClick={handleDeleteResume}
-								className="px-3 py-1.5 bg-red-500 text-white rounded hover:bg-red-600"
+								className="px-3 py-1.5 bg-orange text-white rounded hover:bg-orange/90"
 							>
 								Delete
 							</button>
 							<button
 								onClick={handleGenerateClick}
-								className="px-3 py-1.5 bg-orange-500 text-white rounded hover:bg-orange-600"
+								className="px-3 py-1.5 bg-seaGreen text-white rounded hover:bg-seaGreen/90"
 							>
 								Generate
 							</button>
@@ -214,7 +214,7 @@ const JobApplicationCard = ({
 						</label>
 						<button
 							onClick={handleGenerateClick}
-							className="px-3 py-1.5 bg-orange-500 text-white rounded hover:bg-orange-600"
+							className="px-3 py-1.5 bg-seaGreen text-white rounded hover:bg-seaGreen/90"
 						>
 							Generate
 						</button>
@@ -253,6 +253,7 @@ const JobApplicationCard = ({
 					onClose={handleGeneratorClose}
 					jobDescription={application.jobDescription}
 					resumeText={application.resumeText}
+					applicationId={application._id}
 					onGenerate={() => {}}
 					onSaveJD={handleSaveJD}
 				/>

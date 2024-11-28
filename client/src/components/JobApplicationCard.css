@@ -36,32 +36,32 @@ button,
 }
 
 .upload-btn {
-	background-color: #4caf50;
+	background-color: var(--seaGreen);
 	color: white;
 }
 
 .download-btn {
-	background-color: #2196f3;
+	background-color: var(--seaGreen);
 	color: white;
 }
 
 .delete-btn {
-	background-color: #f44336;
+	background-color: var(--orange);
 	color: white;
 }
 
 .generate-btn {
-	background-color: #ff9800;
+	background-color: var(--seaGreen);
 	color: white;
 }
 
 .edit-btn {
-	background-color: #2196f3;
+	background-color: var(--seaGreen);
 	color: white;
 }
 
 .save-btn {
-	background-color: #4caf50;
+	background-color: var(--seaGreen);
 	color: white;
 }
 
@@ -123,7 +123,7 @@ select:focus {
 }
 
 .generate-btn:disabled {
-	background-color: #ccc;
+	background-color: var(--celadon);
 	cursor: not-allowed;
 }
 

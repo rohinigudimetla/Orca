@@ -1,33 +1,39 @@
 .new-application {
-	background-color: #f8f9fa;
-	border-bottom: 2px dashed #ddd;
+	background-color: white;
+	border-bottom: 2px dashed var(--richBlack);
 	transition: all 0.3s ease;
 }
 
 .new-application:hover {
-	background-color: #fff;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	background-color: var(--bone);
+	box-shadow: 0 2px 8px rgba(13, 31, 34, 0.1);
 }
 
 .new-application input,
 .new-application select {
 	width: 100%;
-	background: transparent;
-	border: 1px solid #ddd;
-	padding: 6px 10px;
+	background: white;
+	border: 1px solid var(--richBlack);
+	padding: 8px 12px;
 	border-radius: 4px;
 	font-size: 14px;
+	color: var(--richBlack);
+	transition: all 0.2s ease;
 }
 
 .new-application input:focus,
 .new-application select:focus {
 	outline: none;
-	border-color: #2196f3;
-	background-color: white;
+	border-color: var(--seaGreen);
+	box-shadow: 0 0 0 2px rgba(10, 135, 84, 0.1);
+}
+
+.new-application input::placeholder {
+	color: rgba(13, 31, 34, 0.5);
 }
 
 .add-btn {
-	background-color: #4caf50;
+	background-color: var(--seaGreen);
 	color: white;
 	padding: 6px 12px;
 	border: none;
@@ -38,9 +44,6 @@
 }
 
 .add-btn:hover {
-	background-color: #45a049;
-}
-
-.new-application input::placeholder {
-	color: #999;
+	background-color: var(--seaGreen);
+	opacity: 0.9;
 }
