@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import JobApplicationCard from "../components/JobApplicationCard";
 import AddJobApplicationForm from "./AddJobApplicationForm";
 import "./JobApplications.css";
+import { useAuth } from "../context/AuthContext";
+import { createApiClient } from "../utils/api";
 
 const JobApplications = () => {
+	const { user } = useAuth();
+	const api = createApiClient(user);
 	const [applications, setApplications] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [editingId, setEditingId] = useState(null);
@@ -13,10 +17,7 @@ const JobApplications = () => {
 	useEffect(() => {
 		const fetchApplications = async () => {
 			try {
-				const response = await fetch(
-					"http://localhost:5000/api/job-applications"
-				);
-				const data = await response.json();
+				const data = await api.get("/job-applications");
 				setApplications(data);
 			} catch (error) {
 				console.error("Error fetching applications:", error);
@@ -26,7 +27,7 @@ const JobApplications = () => {
 		};
 
 		fetchApplications();
-	}, []);
+	}, [api]);
 
 	// Handle editing
 	const handleEditClick = (application) => {
@@ -41,24 +42,17 @@ const JobApplications = () => {
 
 	const handleSaveEdit = async () => {
 		try {
-			const response = await fetch(
-				`http://localhost:5000/api/job-applications/${editingData._id}`,
-				{
-					method: "PUT",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(editingData),
-				}
+			const updatedApplication = await api.put(
+				`/job-applications/${editingData._id}`,
+				editingData
 			);
-			if (response.ok) {
-				const updatedApplication = await response.json();
-				setApplications((prev) =>
-					prev.map((app) =>
-						app._id === updatedApplication._id ? updatedApplication : app
-					)
-				);
-				setEditingId(null);
-				setEditingData(null);
-			}
+			setApplications((prev) =>
+				prev.map((app) =>
+					app._id === updatedApplication._id ? updatedApplication : app
+				)
+			);
+			setEditingId(null);
+			setEditingData(null);
 		} catch (error) {
 			console.error("Error updating application:", error);
 		}
@@ -67,15 +61,8 @@ const JobApplications = () => {
 	// Handle delete
 	const handleDelete = async (id) => {
 		try {
-			const response = await fetch(
-				`http://localhost:5000/api/job-applications/${id}`,
-				{
-					method: "DELETE",
-				}
-			);
-			if (response.ok) {
-				setApplications((prev) => prev.filter((app) => app._id !== id));
-			}
+			await api.delete(`/job-applications/${id}`);
+			setApplications((prev) => prev.filter((app) => app._id !== id));
 		} catch (error) {
 			console.error("Error deleting application:", error);
 		}

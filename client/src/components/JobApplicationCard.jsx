@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import ResumeGeneratorModal from "./ResumeGeneratorModal";
+import { useAuth } from "../context/AuthContext";
+import { createApiClient } from "../utils/api";
 
 const JobApplicationCard = ({
 	application,
@@ -12,6 +14,8 @@ const JobApplicationCard = ({
 	onUpdate,
 }) => {
 	const [isGeneratorOpen, setIsGeneratorOpen] = useState(false);
+	const { user } = useAuth();
+	const api = createApiClient(user);
 
 	const handleGenerateClick = () => {
 		setIsGeneratorOpen(true);
@@ -23,21 +27,10 @@ const JobApplicationCard = ({
 
 	const handleSaveJD = async (jobDescription) => {
 		try {
-			const response = await fetch(
-				`http://localhost:5000/api/job-applications/${application._id}`,
-				{
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ jobDescription }),
-				}
-			);
-
-			if (response.ok) {
-				const updatedApp = await response.json();
-				onUpdate(updatedApp);
-			}
+			const updatedApp = await api.put(`/job-applications/${application._id}`, {
+				jobDescription,
+			});
+			onUpdate(updatedApp);
 		} catch (error) {
 			console.error("Failed to save job description:", error);
 		}
@@ -51,18 +44,11 @@ const JobApplicationCard = ({
 		formData.append("resume", file);
 
 		try {
-			const response = await fetch(
-				`http://localhost:5000/api/job-applications/${application._id}/upload-resume`,
-				{
-					method: "POST",
-					body: formData,
-				}
+			const updatedApplication = await api.upload(
+				`/job-applications/${application._id}/upload-resume`,
+				formData
 			);
-
-			if (response.ok) {
-				const updatedApplication = await response.json();
-				onUpdate(updatedApplication);
-			}
+			onUpdate(updatedApplication);
 		} catch (error) {
 			console.error("Failed to upload resume:", error);
 		}
@@ -70,21 +56,10 @@ const JobApplicationCard = ({
 
 	const handleDownloadResume = async () => {
 		try {
-			const response = await fetch(
-				`http://localhost:5000/api/job-applications/${application._id}/download-resume`,
-				{ method: "GET" }
+			await api.download(
+				`/job-applications/${application._id}/download-resume`,
+				`resume_${application.company}.pdf`
 			);
-			if (response.ok) {
-				const blob = await response.blob();
-				const url = window.URL.createObjectURL(blob);
-				const a = document.createElement("a");
-				a.href = url;
-				a.download = `resume_${application.company}.pdf`;
-				document.body.appendChild(a);
-				a.click();
-				window.URL.revokeObjectURL(url);
-				a.remove();
-			}
 		} catch (error) {
 			console.error("Failed to download resume:", error);
 		}
@@ -92,14 +67,10 @@ const JobApplicationCard = ({
 
 	const handleDeleteResume = async () => {
 		try {
-			const response = await fetch(
-				`http://localhost:5000/api/job-applications/${application._id}/delete-resume`,
-				{ method: "DELETE" }
+			const updatedApplication = await api.delete(
+				`/job-applications/${application._id}/delete-resume`
 			);
-			if (response.ok) {
-				const updatedApplication = await response.json();
-				onUpdate(updatedApplication);
-			}
+			onUpdate(updatedApplication);
 		} catch (error) {
 			console.error("Failed to delete resume:", error);
 		}

@@ -1,11 +1,12 @@
 import React from "react";
+import Navbar from "../components/Navbar";
 import JobApplications from "../features/JobApplications";
 // import "./HomePage.css";
 
 const HomePage = () => {
 	return (
-		<div className="home-page">
-			<h1>Job Applications</h1>
+		<div>
+			<Navbar />
 			<JobApplications />
 		</div>
 	);

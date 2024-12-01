@@ -59,7 +59,7 @@ const extractTextFromPdf = async (filePath) => {
 // Get all job applications
 export const getJobApplications = async (req, res) => {
 	try {
-		const jobApplications = await JobApplication.find();
+		const jobApplications = await JobApplication.find({ userId: req.userId });
 		res.status(200).json(jobApplications);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
@@ -102,6 +102,7 @@ export const createJobApplication = async (req, res) => {
 			contact,
 			resume: req.file ? req.file.path : null,
 			resumeText: resumeText || null,
+			userId: req.userId,
 		});
 
 		const savedApplication = await newJobApplication.save();
@@ -117,13 +118,21 @@ export const createJobApplication = async (req, res) => {
 export const updateJobApplication = async (req, res) => {
 	try {
 		const { id } = req.params;
+		const application = await JobApplication.findOne({
+			_id: id,
+			userId: req.userId,
+		});
+
+		if (!application) {
+			return res.status(404).json({ message: "Job application not found" });
+		}
+
 		const updatedJobApplication = await JobApplication.findByIdAndUpdate(
 			id,
 			req.body,
 			{ new: true }
 		);
-		if (!updatedJobApplication)
-			return res.status(404).json({ message: "Job application not found" });
+
 		res.status(200).json(updatedJobApplication);
 	} catch (error) {
 		res.status(400).json({ message: error.message });

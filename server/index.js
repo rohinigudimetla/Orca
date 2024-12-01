@@ -3,6 +3,8 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import jobApplicationRoutes from "./routes/jobApplicationRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import { auth } from "./middleware/auth.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -28,7 +30,8 @@ mongoose
 	});
 
 // Routes
-app.use("/api/job-applications", jobApplicationRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/job-applications", auth, jobApplicationRoutes);
 
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);

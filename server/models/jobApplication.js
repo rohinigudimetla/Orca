@@ -22,6 +22,11 @@ const jobApplicationSchema = new mongoose.Schema({
 	resume: { type: String, default: null },
 	jobDescription: { type: String, default: "" },
 	resumeText: { type: String, default: null },
+	userId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
+		required: true,
+	},
 });
 
 const JobApplication = mongoose.model("JobApplication", jobApplicationSchema);
