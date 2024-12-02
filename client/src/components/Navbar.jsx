@@ -1,5 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import OrcaLogo from "./icons/OrcaLogo";
 
 const Navbar = () => {
 	const { user, logout } = useAuth();
@@ -11,22 +12,23 @@ const Navbar = () => {
 	};
 
 	return (
-		<nav className="bg-richBlack p-4">
-			<div className="container mx-auto flex justify-between items-center">
-				<h1 className="text-bone text-xl font-bold">Job Application Tracker</h1>
-				<div className="flex items-center gap-4">
-					<span className="text-bone">{user?.user?.name}</span>
-					<img
-						src={user?.user?.picture}
-						alt="Profile"
-						className="w-8 h-8 rounded-full"
-					/>
-					<button
-						onClick={handleLogout}
-						className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-					>
-						Logout
-					</button>
+		<nav className="bg-richBlack shadow-md">
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div className="flex justify-between h-16">
+					<div className="flex items-center">
+						<OrcaLogo />
+						{/* <h1 className="text-xl font-bold text-bone">
+							Job Application Tracker
+						</h1> */}
+					</div>
+					<div className="flex items-center">
+						<button
+							onClick={handleLogout}
+							className="px-4 py-2 bg-seaGreen text-white rounded-full hover:bg-seaGreen/90 transition-colors"
+						>
+							Log Out
+						</button>
+					</div>
 				</div>
 			</div>
 		</nav>

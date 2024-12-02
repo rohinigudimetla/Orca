@@ -69,16 +69,24 @@ button,
 input,
 select {
 	width: 100%;
-	padding: 6px 10px;
-	border: 1px solid #ddd;
+	padding: 8px 12px;
+	border: 1px solid var(--richBlack);
 	border-radius: 4px;
 	font-size: 14px;
+	color: var(--richBlack);
+	transition: all 0.2s ease;
+	background: white;
 }
 
 input:focus,
 select:focus {
 	outline: none;
-	border-color: #2196f3;
+	border-color: var(--seaGreen);
+	box-shadow: 0 0 0 2px rgba(10, 135, 84, 0.1);
+}
+
+input::placeholder {
+	color: rgba(13, 31, 34, 0.5);
 }
 
 /* Responsive design */

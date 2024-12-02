@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import ResumeGeneratorModal from "./ResumeGeneratorModal";
 import { useAuth } from "../context/AuthContext";
 import { createApiClient } from "../utils/api";
+import DownloadIcon from "./icons/DownloadIcon";
+import UploadIcon from "./icons/UploadIcon";
+import EditIcon from "./icons/EditIcon";
+import DeleteIcon from "./icons/DeleteIcon";
+import GenerateIcon from "./icons/GenerateIcon";
 
 const JobApplicationCard = ({
 	application,
@@ -16,6 +21,8 @@ const JobApplicationCard = ({
 	const [isGeneratorOpen, setIsGeneratorOpen] = useState(false);
 	const { user } = useAuth();
 	const api = createApiClient(user);
+	const [generatedResumeText, setGeneratedResumeText] = useState("");
+	const [isExpanded, setIsExpanded] = useState(false);
 
 	const handleGenerateClick = () => {
 		setIsGeneratorOpen(true);
@@ -77,156 +84,236 @@ const JobApplicationCard = ({
 	};
 
 	return (
-		<div className="grid grid-cols-6 border-b border-gray-200 hover:bg-gray-50 transition-colors">
-			{/* Role Cell */}
-			<div className="p-3 flex items-center">
-				{isEditing ? (
-					<input
-						type="text"
-						name="role"
-						value={editingData.role}
-						onChange={onEditChange}
-						className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-					/>
-				) : (
-					application.role
-				)}
-			</div>
-
-			{/* Company Cell */}
-			<div className="p-3 flex items-center">
-				{isEditing ? (
-					<input
-						type="text"
-						name="company"
-						value={editingData.company}
-						onChange={onEditChange}
-						className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-					/>
-				) : (
-					application.company
-				)}
-			</div>
-
-			{/* Status Cell */}
-			<div className="p-3 flex items-center">
-				{isEditing ? (
-					<select
-						name="status"
-						value={editingData.status}
-						onChange={onEditChange}
-						className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-					>
-						<option value="submitted">Submitted</option>
-						<option value="assessment">Assessment</option>
-						<option value="interviewing">Interviewing</option>
-						<option value="offer received">Offer Received</option>
-						<option value="offer accepted">Offer Accepted</option>
-					</select>
-				) : (
-					application.status
-				)}
-			</div>
-
-			{/* Contact Cell */}
-			<div className="p-3 flex items-center">
-				{isEditing ? (
-					<input
-						type="text"
-						name="contact"
-						value={editingData.contact}
-						onChange={onEditChange}
-						className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-					/>
-				) : (
-					application.contact
-				)}
-			</div>
-
-			{/* Resume Cell */}
-			<div className="p-3 flex flex-col gap-2">
-				{application.resume ? (
-					<>
-						<div className="flex gap-2">
+		<div className="bg-white border border-gray-200 rounded-lg mb-2 overflow-hidden">
+			{/* Desktop View */}
+			<div className="hidden sm:grid sm:grid-cols-6 sm:items-center sm:p-4">
+				<div className="px-3">
+					<span className="font-medium">{application.role}</span>
+				</div>
+				<div className="px-3">
+					<span>{application.company}</span>
+				</div>
+				<div className="px-3">
+					<span className="capitalize">{application.status}</span>
+				</div>
+				<div className="px-3">
+					<span>{application.contact || "No contact info"}</span>
+				</div>
+				<div className="col-span-2 px-3 flex gap-2">
+					{application.resume ? (
+						<>
 							<button
 								onClick={handleDownloadResume}
-								className="px-3 py-1.5 bg-seaGreen text-white rounded hover:bg-seaGreen/90"
+								className="px-2 py-2 bg-richBlack text-white rounded-full text-sm flex items-center gap-1"
 							>
-								Download
+								<DownloadIcon />
 							</button>
 							<button
 								onClick={handleDeleteResume}
-								className="px-3 py-1.5 bg-orange text-white rounded hover:bg-orange/90"
+								className="px-2 py-2 bg-orange text-white rounded-full text-sm flex items-center gap-1"
 							>
-								Delete
+								<DeleteIcon />
 							</button>
 							<button
 								onClick={handleGenerateClick}
-								className="px-3 py-1.5 bg-seaGreen text-white rounded hover:bg-seaGreen/90"
+								className="px-2 py-2 bg-[#FF7F11] text-white rounded-full text-sm flex items-center gap-1"
 							>
-								Generate
+								<GenerateIcon />
+							</button>
+						</>
+					) : (
+						<>
+							<input
+								type="file"
+								id={`resume-upload-${application._id}`}
+								accept=".pdf"
+								onChange={handleFileUpload}
+								className="hidden"
+							/>
+							<label
+								htmlFor={`resume-upload-${application._id}`}
+								className="px-2 py-2 bg-richBlack text-white rounded-full text-sm cursor-pointer flex items-center gap-1"
+							>
+								<UploadIcon />
+							</label>
+							<button
+								onClick={handleGenerateClick}
+								className="px-2 py-2 bg-[#FF7F11] text-white rounded-full text-sm flex items-center gap-1"
+							>
+								<GenerateIcon />
+							</button>
+						</>
+					)}
+					{isEditing ? (
+						<button
+							onClick={onSaveEdit}
+							className="px-2 py-2 bg-seaGreen text-white rounded-full text-sm"
+						>
+							Save
+						</button>
+					) : (
+						<button
+							onClick={onEditClick}
+							className="px-2 py-2 bg-seaGreen text-white rounded-full text-sm flex items-center gap-1"
+						>
+							<EditIcon />
+						</button>
+					)}
+					<button
+						onClick={() => onDelete(application._id)}
+						className="px-2 py-2 bg-orange text-white rounded-full text-sm flex items-center gap-1"
+					>
+						<DeleteIcon />
+					</button>
+				</div>
+			</div>
+
+			{/* Mobile View */}
+			<div className="sm:hidden">
+				{/* Mobile content from previous version */}
+				<div className="p-3 flex items-center justify-between">
+					<div className="flex-1">
+						<span className="font-medium block">{application.role}</span>
+						<span className="text-sm text-gray-500">{application.company}</span>
+						<span className="text-xs bg-seaGreen/10 text-seaGreen px-2 py-0.5 rounded-full mt-1 inline-block capitalize">
+							{application.status}
+						</span>
+					</div>
+
+					<button
+						onClick={() => setIsExpanded(!isExpanded)}
+						className="ml-2 p-2 hover:bg-gray-100 rounded-full transition-colors"
+					>
+						<svg
+							className={`w-5 h-5 transform transition-transform ${
+								isExpanded ? "rotate-180" : ""
+							}`}
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="M19 9l-7 7-7-7"
+							/>
+						</svg>
+					</button>
+				</div>
+
+				{isExpanded && (
+					<div className="border-t border-gray-200 p-3 space-y-4 bg-gray-50">
+						{/* Contact Info */}
+						<div>
+							<span className="text-xs text-gray-500 uppercase tracking-wider">
+								Contact
+							</span>
+							{isEditing ? (
+								<input
+									type="text"
+									name="contact"
+									value={editingData.contact}
+									onChange={onEditChange}
+									className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white"
+								/>
+							) : (
+								<span className="block mt-1">
+									{application.contact || "No contact info"}
+								</span>
+							)}
+						</div>
+
+						{/* Resume Actions */}
+						<div>
+							<span className="text-xs text-gray-500 uppercase tracking-wider block mb-2">
+								Resume Actions
+							</span>
+							{application.resume ? (
+								<div className="flex flex-wrap gap-2">
+									<button
+										onClick={handleDownloadResume}
+										className="flex-1 px-2 py-2 bg-richBlack text-white rounded-full text-sm font-medium flex items-center justify-center gap-1"
+									>
+										<DownloadIcon />
+									</button>
+									<button
+										onClick={handleDeleteResume}
+										className="flex-1 px-2 py-2 bg-orange text-white rounded-full text-sm font-medium flex items-center justify-center gap-1"
+									>
+										<DeleteIcon />
+									</button>
+									<button
+										onClick={handleGenerateClick}
+										className="flex-1 px-2 py-2 bg-[#FF7F11] text-white rounded-full text-sm font-medium flex items-center justify-center gap-1"
+									>
+										<GenerateIcon />
+									</button>
+								</div>
+							) : (
+								<div className="flex flex-wrap gap-2">
+									<input
+										type="file"
+										id={`resume-upload-${application._id}`}
+										accept=".pdf"
+										onChange={handleFileUpload}
+										className="hidden"
+									/>
+									<label
+										htmlFor={`resume-upload-${application._id}`}
+										className="flex-1 px-2 py-2 bg-richBlack text-white rounded-full text-sm font-medium text-center flex items-center justify-center gap-1"
+									>
+										<UploadIcon />
+									</label>
+									<button
+										onClick={handleGenerateClick}
+										className="flex-1 px-2 py-2 bg-[#FF7F11] text-white rounded-full text-sm font-medium flex items-center justify-center gap-1"
+									>
+										<GenerateIcon />
+									</button>
+								</div>
+							)}
+						</div>
+
+						{/* Card Actions */}
+						<div className="flex gap-2">
+							{isEditing ? (
+								<button
+									onClick={onSaveEdit}
+									className="flex-1 px-2 py-2 bg-seaGreen text-white rounded-full text-sm font-medium"
+								>
+									Save
+								</button>
+							) : (
+								<button
+									onClick={onEditClick}
+									className="flex-1 px-2 py-2 bg-seaGreen text-white rounded-full text-sm font-medium flex items-center justify-center gap-1"
+								>
+									<EditIcon />
+								</button>
+							)}
+							<button
+								onClick={() => onDelete(application._id)}
+								className="flex-1 px-2 py-2 bg-orange text-white rounded-full text-sm font-medium flex items-center justify-center gap-1"
+							>
+								<DeleteIcon />
 							</button>
 						</div>
-					</>
-				) : (
-					<div className="flex gap-2">
-						<input
-							type="file"
-							id={`resume-upload-${application._id}`}
-							accept=".pdf"
-							onChange={handleFileUpload}
-							className="hidden"
-						/>
-						<label
-							htmlFor={`resume-upload-${application._id}`}
-							className="px-3 py-1.5 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer"
-						>
-							Upload
-						</label>
-						<button
-							onClick={handleGenerateClick}
-							className="px-3 py-1.5 bg-seaGreen text-white rounded hover:bg-seaGreen/90"
-						>
-							Generate
-						</button>
 					</div>
 				)}
 			</div>
 
-			{/* Actions Cell */}
-			<div className="p-3 flex items-center gap-2">
-				{isEditing ? (
-					<button
-						onClick={onSaveEdit}
-						className="px-3 py-1.5 bg-green-500 text-white rounded hover:bg-green-600"
-					>
-						Save
-					</button>
-				) : (
-					<button
-						onClick={onEditClick}
-						className="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-blue-600"
-					>
-						Edit
-					</button>
-				)}
-				<button
-					onClick={() => onDelete(application._id)}
-					className="px-3 py-1.5 bg-red-500 text-white rounded hover:bg-red-600"
-				>
-					Delete
-				</button>
-			</div>
-
+			{/* Keep the modal */}
 			{isGeneratorOpen && (
 				<ResumeGeneratorModal
 					isOpen={isGeneratorOpen}
 					onClose={handleGeneratorClose}
 					jobDescription={application.jobDescription}
 					resumeText={application.resumeText}
-					applicationId={application._id}
-					onGenerate={() => {}}
+					generatedResume={generatedResumeText}
+					setGeneratedResume={setGeneratedResumeText}
 					onSaveJD={handleSaveJD}
+					applicationId={application._id}
 				/>
 			)}
 		</div>

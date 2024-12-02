@@ -1,9 +1,11 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 	const { login } = useAuth();
+	const navigate = useNavigate();
 
 	const handleSuccess = async (credentialResponse) => {
 		const decoded = jwtDecode(credentialResponse.credential);
@@ -19,6 +21,7 @@ const Login = () => {
 
 			const data = await response.json();
 			login(data);
+			navigate("/");
 		} catch (error) {
 			console.error("Authentication failed:", error);
 		}
