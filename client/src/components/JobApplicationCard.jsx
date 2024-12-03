@@ -84,7 +84,7 @@ const JobApplicationCard = ({
 	};
 
 	return (
-		<div className="bg-white border border-gray-200 rounded-lg mb-2 overflow-hidden">
+		<div className="bg-white border border-gray-200 rounded-3xl mb-2 overflow-hidden">
 			{/* Desktop View */}
 			<div className="hidden sm:grid sm:grid-cols-6 sm:items-center sm:p-4">
 				<div className="px-3">
@@ -170,40 +170,52 @@ const JobApplicationCard = ({
 
 			{/* Mobile View */}
 			<div className="sm:hidden">
-				{/* Mobile content from previous version */}
-				<div className="p-3 flex items-center justify-between">
-					<div className="flex-1">
-						<span className="font-medium block">{application.role}</span>
-						<span className="text-sm text-gray-500">{application.company}</span>
-						<span className="text-xs bg-seaGreen/10 text-seaGreen px-2 py-0.5 rounded-full mt-1 inline-block capitalize">
+				<div
+					className="p-6 cursor-pointer flex flex-col gap-2 transition-all duration-200 ease-out"
+					onClick={() => setIsExpanded(!isExpanded)}
+				>
+					<div className="flex justify-between items-start animate-fade-in">
+						<div className="space-y-2">
+							<span className="font-medium block text-2xl">
+								{application.role}
+							</span>
+							<span className="text-lg text-gray-500 block">
+								{application.company}
+							</span>
+						</div>
+						<span
+							className={`status-badge text-base px-4 py-2 rounded-full capitalize
+								${application.status === "submitted" ? "bg-cerulean/10 text-cerulean" : ""}
+								${application.status === "assessment" ? "bg-[#9747FF]/10 text-[#9747FF]" : ""}
+								${application.status === "interviewing" ? "bg-seaGreen/10 text-seaGreen" : ""}
+								${
+									application.status === "offer received"
+										? "bg-[#38B000]/10 text-[#38B000]"
+										: ""
+								}
+								${
+									application.status === "offer accepted"
+										? "bg-[#38B000]/10 text-[#38B000]"
+										: ""
+								}
+								${application.status === "offer rejected" ? "bg-orange/10 text-orange" : ""}
+								${application.status === "hired" ? "bg-[#38B000]/10 text-[#38B000]" : ""}
+								${application.status === "rejected" ? "bg-orange/10 text-orange" : ""}`}
+						>
 							{application.status}
 						</span>
 					</div>
-
-					<button
-						onClick={() => setIsExpanded(!isExpanded)}
-						className="ml-2 p-2 hover:bg-gray-100 rounded-full transition-colors"
-					>
-						<svg
-							className={`w-5 h-5 transform transition-transform ${
-								isExpanded ? "rotate-180" : ""
-							}`}
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M19 9l-7 7-7-7"
-							/>
-						</svg>
-					</button>
 				</div>
 
 				{isExpanded && (
-					<div className="border-t border-gray-200 p-3 space-y-4 bg-gray-50">
+					<div
+						className={`
+						border-t border-gray-200 p-3 space-y-4 bg-gray-50
+						transform transition-all duration-300 ease-out
+						${isExpanded ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"}
+					`}
+						onClick={(e) => e.stopPropagation()}
+					>
 						{/* Contact Info */}
 						<div>
 							<span className="text-xs text-gray-500 uppercase tracking-wider">

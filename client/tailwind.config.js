@@ -8,7 +8,8 @@ module.exports = {
 				celadon: "#AEF6C7",
 				orange: "#CC0000",
 				seaGreen: "#0A8754",
-				bone: "#DDDBCB",
+				bone: "#f7f7f3",
+				cerulean: "#007991",
 			},
 			keyframes: {
 				"slide-up": {

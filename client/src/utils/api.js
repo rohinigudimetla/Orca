@@ -75,7 +75,6 @@ export const createApiClient = (user) => {
 
 const handleResponse = async (response) => {
 	if (response.status === 401) {
-		// Handle token expiration
 		localStorage.removeItem("user");
 		window.location.href = "/login";
 		throw new Error("Session expired");
@@ -84,6 +83,10 @@ const handleResponse = async (response) => {
 	if (!response.ok) {
 		const error = await response.json();
 		throw new Error(error.message);
+	}
+
+	if (response.status === 204) {
+		return null;
 	}
 
 	return response.json();
