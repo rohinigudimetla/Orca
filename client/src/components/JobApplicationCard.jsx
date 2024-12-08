@@ -88,16 +88,67 @@ const JobApplicationCard = ({
 			{/* Desktop View */}
 			<div className="hidden sm:grid sm:grid-cols-6 sm:items-center sm:p-4">
 				<div className="px-3">
-					<span className="font-medium">{application.role}</span>
+					{isEditing ? (
+						<input
+							type="text"
+							name="role"
+							value={editingData.role}
+							onChange={onEditChange}
+							className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white"
+							placeholder="Role"
+						/>
+					) : (
+						<span className="font-medium">{application.role}</span>
+					)}
 				</div>
 				<div className="px-3">
-					<span>{application.company}</span>
+					{isEditing ? (
+						<input
+							type="text"
+							name="company"
+							value={editingData.company}
+							onChange={onEditChange}
+							className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white"
+							placeholder="Company"
+						/>
+					) : (
+						<span>{application.company}</span>
+					)}
 				</div>
 				<div className="px-3">
-					<span className="capitalize">{application.status}</span>
+					{isEditing ? (
+						<select
+							name="status"
+							value={editingData.status}
+							onChange={onEditChange}
+							className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white"
+						>
+							<option value="submitted">Submitted</option>
+							<option value="assessment">Assessment</option>
+							<option value="interviewing">Interviewing</option>
+							<option value="offer received">Offer Received</option>
+							<option value="offer accepted">Offer Accepted</option>
+							<option value="offer rejected">Offer Rejected</option>
+							<option value="hired">Hired</option>
+							<option value="rejected">Rejected</option>
+						</select>
+					) : (
+						<span className="capitalize">{application.status}</span>
+					)}
 				</div>
 				<div className="px-3">
-					<span>{application.contact || "No contact info"}</span>
+					{isEditing ? (
+						<input
+							type="text"
+							name="contact"
+							value={editingData.contact}
+							onChange={onEditChange}
+							className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white"
+							placeholder="Contact"
+						/>
+					) : (
+						<span>{application.contact || "No contact info"}</span>
+					)}
 				</div>
 				<div className="col-span-2 px-3 flex gap-2">
 					{application.resume ? (
@@ -176,34 +227,97 @@ const JobApplicationCard = ({
 				>
 					<div className="flex justify-between items-start animate-fade-in">
 						<div className="space-y-2">
-							<span className="font-medium block text-2xl">
-								{application.role}
-							</span>
-							<span className="text-lg text-gray-500 block">
-								{application.company}
-							</span>
+							{isEditing ? (
+								<div className="space-y-3">
+									<input
+										type="text"
+										name="role"
+										value={editingData.role}
+										onChange={onEditChange}
+										className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white text-base"
+										placeholder="Role"
+									/>
+									<input
+										type="text"
+										name="company"
+										value={editingData.company}
+										onChange={onEditChange}
+										className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white text-base"
+										placeholder="Company"
+									/>
+									<select
+										name="status"
+										value={editingData.status}
+										onChange={onEditChange}
+										className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white text-2xl"
+										style={{ fontSize: "16px" }}
+									>
+										<option value="submitted">Submitted</option>
+										<option value="assessment">Assessment</option>
+										<option value="interviewing">Interviewing</option>
+										<option value="offer received">Offer Received</option>
+										<option value="offer accepted">Offer Accepted</option>
+										<option value="offer rejected">Offer Rejected</option>
+										<option value="hired">Hired</option>
+										<option value="rejected">Rejected</option>
+									</select>
+								</div>
+							) : (
+								<>
+									<span className="font-medium block text-2xl">
+										{application.role}
+									</span>
+									<span className="text-lg text-gray-500 block">
+										{application.company}
+									</span>
+									<span
+										className={`status-badge text-base px-4 py-2 rounded-full capitalize inline-flex
+                        ${
+													application.status === "submitted"
+														? "bg-cerulean/10 text-cerulean"
+														: ""
+												}
+                        ${
+													application.status === "assessment"
+														? "bg-[#9747FF]/10 text-[#9747FF]"
+														: ""
+												}
+                        ${
+													application.status === "interviewing"
+														? "bg-seaGreen/10 text-seaGreen"
+														: ""
+												}
+                        ${
+													application.status === "offer received"
+														? "bg-[#38B000]/10 text-[#38B000]"
+														: ""
+												}
+                        ${
+													application.status === "offer accepted"
+														? "bg-[#38B000]/10 text-[#38B000]"
+														: ""
+												}
+                        ${
+													application.status === "offer rejected"
+														? "bg-orange/10 text-orange"
+														: ""
+												}
+                        ${
+													application.status === "hired"
+														? "bg-[#38B000]/10 text-[#38B000]"
+														: ""
+												}
+                        ${
+													application.status === "rejected"
+														? "bg-orange/10 text-orange"
+														: ""
+												}`}
+									>
+										{application.status}
+									</span>
+								</>
+							)}
 						</div>
-						<span
-							className={`status-badge text-base px-4 py-2 rounded-full capitalize
-								${application.status === "submitted" ? "bg-cerulean/10 text-cerulean" : ""}
-								${application.status === "assessment" ? "bg-[#9747FF]/10 text-[#9747FF]" : ""}
-								${application.status === "interviewing" ? "bg-seaGreen/10 text-seaGreen" : ""}
-								${
-									application.status === "offer received"
-										? "bg-[#38B000]/10 text-[#38B000]"
-										: ""
-								}
-								${
-									application.status === "offer accepted"
-										? "bg-[#38B000]/10 text-[#38B000]"
-										: ""
-								}
-								${application.status === "offer rejected" ? "bg-orange/10 text-orange" : ""}
-								${application.status === "hired" ? "bg-[#38B000]/10 text-[#38B000]" : ""}
-								${application.status === "rejected" ? "bg-orange/10 text-orange" : ""}`}
-						>
-							{application.status}
-						</span>
 					</div>
 				</div>
 
@@ -227,7 +341,7 @@ const JobApplicationCard = ({
 									name="contact"
 									value={editingData.contact}
 									onChange={onEditChange}
-									className="w-full mt-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white"
+									className="w-full mt-1 p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-white text-base"
 								/>
 							) : (
 								<span className="block mt-1">

@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 
 export const auth = async (req, res, next) => {
+	res.header("Access-Control-Allow-Origin", "http://localhost:5173"); // Your frontend URL
+	res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+	res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
 	try {
 		const token = req.headers.authorization?.split(" ")[1];
 

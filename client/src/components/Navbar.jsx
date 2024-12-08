@@ -21,10 +21,18 @@ const Navbar = () => {
 							Job Application Tracker
 						</h1> */}
 					</div>
-					<div className="flex items-center">
+					<div className="flex items-center gap-4">
+						<span className="text-bone hidden sm:block">
+							{user?.user?.name}
+						</span>
+						<img
+							src={user?.user?.picture}
+							alt="Profile"
+							className="w-8 h-8 rounded-full"
+						/>
 						<button
 							onClick={handleLogout}
-							className="px-4 py-2 bg-seaGreen text-white rounded-full hover:bg-seaGreen/90 transition-colors"
+							className="px-4 py-2 sm:px-4 sm:py-2 bg-seaGreen text-white rounded-full hover:bg-seaGreen/90 transition-colors"
 						>
 							Log Out
 						</button>

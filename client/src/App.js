@@ -5,6 +5,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Login from "./components/Login";
 import HomePage from "./pages/HomePage";
+// Import the new DashboardPage
+import DashboardPage from "./pages/DashboardPage";
 
 const ProtectedRoute = ({ children }) => {
 	const { user, loading } = useAuth();
@@ -21,6 +23,14 @@ function App() {
 			<AuthProvider>
 				<BrowserRouter>
 					<Routes>
+						<Route
+							path="/dashboard"
+							element={
+								<ProtectedRoute>
+									<DashboardPage />
+								</ProtectedRoute>
+							}
+						/>
 						<Route path="/login" element={<Login />} />
 						<Route
 							path="/"

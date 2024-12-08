@@ -3,6 +3,16 @@ import { useAuth } from "../context/AuthContext";
 const BASE_URL = "http://localhost:5000/api";
 
 export const createApiClient = (user) => {
+	if (!user || !user.token) {
+		return {
+			get: async () => null,
+			post: async () => null,
+			put: async () => null,
+			delete: async () => null,
+			upload: async () => null,
+			download: async () => null,
+		};
+	}
 	const headers = {
 		"Content-Type": "application/json",
 		Authorization: `Bearer ${user.token}`,

@@ -71,7 +71,7 @@ const AddJobApplicationForm = ({ onAdd }) => {
 							value={formData.role}
 							onChange={handleChange}
 							required
-							className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
+							className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
 						/>
 					</div>
 					<div className="p-3">
@@ -82,7 +82,7 @@ const AddJobApplicationForm = ({ onAdd }) => {
 							value={formData.company}
 							onChange={handleChange}
 							required
-							className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
+							className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
 						/>
 					</div>
 					<div className="p-3">
@@ -90,7 +90,7 @@ const AddJobApplicationForm = ({ onAdd }) => {
 							name="status"
 							value={formData.status}
 							onChange={handleChange}
-							className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
+							className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
 						>
 							<option value="submitted">Submitted</option>
 							<option value="assessment">Assessment</option>
@@ -110,7 +110,7 @@ const AddJobApplicationForm = ({ onAdd }) => {
 							value={formData.contact}
 							onChange={handleChange}
 							required
-							className="w-full p-2 border border-richBlack rounded bg-white focus:outline-none focus:border-seaGreen focus:ring-2 focus:ring-seaGreen/10"
+							className="w-full p-2 border border-gray-300 rounded-full bg-white focus:outline-none focus:border-seaGreen focus:ring-2 focus:ring-seaGreen/10"
 						/>
 					</div>
 					<div className="p-3">
@@ -119,13 +119,13 @@ const AddJobApplicationForm = ({ onAdd }) => {
 							name="resume"
 							onChange={handleFileChange}
 							required
-							className="w-full p-2 border border-richBlack rounded bg-white focus:outline-none focus:border-seaGreen focus:ring-2 focus:ring-seaGreen/10"
+							className="w-full p-2 border border-gray-300 rounded-full bg-white focus:outline-none focus:border-seaGreen focus:ring-2 focus:ring-seaGreen/10"
 						/>
 					</div>
 					<div className="p-3">
 						<button
 							type="submit"
-							className="px-4 py-2 bg-seaGreen text-white rounded hover:bg-seaGreen/90 transition-colors"
+							className="px-4 py-2 bg-seaGreen text-white rounded-full hover:bg-seaGreen/90 transition-colors"
 						>
 							Add
 						</button>
@@ -176,7 +176,7 @@ const AddJobApplicationForm = ({ onAdd }) => {
 								value={formData.role}
 								onChange={handleChange}
 								required
-								className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
+								className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
 							/>
 							<input
 								type="text"
@@ -185,13 +185,13 @@ const AddJobApplicationForm = ({ onAdd }) => {
 								value={formData.company}
 								onChange={handleChange}
 								required
-								className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
+								className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
 							/>
 							<select
 								name="status"
 								value={formData.status}
 								onChange={handleChange}
-								className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
+								className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-seaGreen bg-transparent"
 							>
 								<option value="submitted">Submitted</option>
 								<option value="assessment">Assessment</option>
@@ -209,14 +209,14 @@ const AddJobApplicationForm = ({ onAdd }) => {
 								value={formData.contact}
 								onChange={handleChange}
 								required
-								className="w-full p-2 border border-richBlack rounded bg-white focus:outline-none focus:border-seaGreen focus:ring-2 focus:ring-seaGreen/10"
+								className="w-full p-2 border border-gray-300 rounded-full bg-white focus:outline-none focus:border-seaGreen focus:ring-2 focus:ring-seaGreen/10"
 							/>
 							<input
 								type="file"
 								name="resume"
 								onChange={handleFileChange}
 								required
-								className="w-full p-2 border border-richBlack rounded bg-white focus:outline-none focus:border-seaGreen focus:ring-2 focus:ring-seaGreen/10"
+								className="w-full p-2 border border-gray-300 rounded-full bg-white focus:outline-none focus:border-seaGreen focus:ring-2 focus:ring-seaGreen/10"
 							/>
 							<button
 								type="submit"
